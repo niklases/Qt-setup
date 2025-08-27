@@ -23,7 +23,7 @@ Write-Host "Found Qt: $qtDir"
 
 $buildDir = "build"
 $config = "Debug"
-$exePath = "$buildDir\$config\qt_app.exe"
+$exePath = "$buildDir\$config\hello_qt_app.exe"
 
 cmake -B $buildDir -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH="$qtDir"
 cmake --build $buildDir --config $config
