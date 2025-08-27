@@ -4,6 +4,10 @@ project(HelloWorldQt LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Set source directory
+set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+
 # Tell CMake to find both Core and Widgets modules
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 # Add custom module path
@@ -20,10 +24,10 @@ set(CMAKE_AUTORCC ON)
 # else: set Sourcs/directories first and then add executables, see 
 # https://stackoverflow.com/questions/13703647/how-to-properly-add-include-directories-with-cmake
 add_executable(qt_app 
-    main.cpp 
-    mainwindow.cpp
-    nvml_vram.cpp
-    vram_worker.cpp
+    ${SRC_DIR}/main.cpp
+    ${SRC_DIR}/mainwindow.cpp
+    ${SRC_DIR}/nvml_vram.cpp
+    ${SRC_DIR}/vram_worker.cpp
 )
 
 # Link against both Qt6::Core and Qt6::Widgets
