@@ -1,3 +1,7 @@
+# Build files
+example_apps/Hello_Qt_App/build/*
+example_apps/Minimal_App/build/*
+
 # Prerequisites
 *.d
 
