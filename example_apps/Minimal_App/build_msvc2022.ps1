@@ -1,8 +1,12 @@
 $qtBaseDir = "C:\Qt"
 $qtSearchPattern = "6.*"
 $msvcSubdir = "msvc2022_64"
+$msvcGenerator = "Visual Studio 17 2022"
+
 
 $qtVersions = Get-ChildItem -Path $qtBaseDir -Directory | Where-Object { $_.Name -like $qtSearchPattern } | Sort-Object Name -Descending
+
+Write-Host "Found Qt version: $qtVersions" 
 
 $qtDir = $null
 foreach ($version in $qtVersions) {
@@ -25,7 +29,7 @@ $buildDir = "build"
 $config = "Debug"
 $exePath = "$buildDir\$config\qt_app.exe"
 
-cmake -B $buildDir -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH="$qtDir"
+cmake -B $buildDir -G $msvcGenerator -A x64 -DCMAKE_PREFIX_PATH="$qtDir"
 cmake --build $buildDir --config $config
 
 & "$qtDir\bin\windeployqt.exe" "$exePath"
