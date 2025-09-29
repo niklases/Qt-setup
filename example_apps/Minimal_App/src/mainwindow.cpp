@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_button_abort_work = getDefaultButton("Abort work");
     m_button_abort_work->setParent(centralWidget);
+    m_button_abort_work->blockSignals(true);
 
     m_button_start_task = getDefaultButton("Start Task");
     connect(m_button_start_task, &QPushButton::clicked, this, &MainWindow::startWork);
@@ -94,6 +95,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::destroyed, m_vram_thread, &QThread::quit);
     connect(m_vram_thread, &QThread::finished, m_vram_worker, &QObject::deleteLater);
     connect(m_vram_thread, &QThread::finished, m_vram_thread, &QObject::deleteLater);
+
+
+    // connect aborting button (here?)
+    connect(m_button_abort_work, &QPushButton::clicked, this, &MainWindow::abortWork);
+
     m_vram_thread->start();
 }
 
@@ -107,6 +113,7 @@ void MainWindow::startWork()
     m_thread = new QThread(this);
     m_worker = new Worker();
     m_worker->moveToThread(m_thread);
+    m_button_abort_work->blockSignals(false);
 
     connect(m_thread, &QThread::started, m_worker, &Worker::doWork);
     connect(m_worker, &Worker::textReady, this, &MainWindow::appendText);
@@ -114,14 +121,14 @@ void MainWindow::startWork()
     connect(m_worker, &Worker::finished, m_thread, &QThread::quit);
     connect(m_worker, &Worker::finished, m_worker, &Worker::deleteLater);
     connect(m_thread, &QThread::finished, m_thread, &QThread::deleteLater);
-    // connect aborting button (here?)
-    connect(m_button_abort_work, &QPushButton::clicked, this, &MainWindow::abortWork);
+
     m_thread->start();
 }
 
 void MainWindow::workFinished()
 {
     qDebug() << "Task finished, quitting thread...";
+    m_button_abort_work->blockSignals(true);
     m_thread->quit();
     m_thread->wait();
     delete m_thread;  // not required?!
